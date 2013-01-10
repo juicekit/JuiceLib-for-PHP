@@ -15,7 +15,11 @@ use JuiceLib\String,
     JuiceLib\Decimal,
     JuiceLib\Math,
     JuiceLib\Session,
-    JuiceLib\HttpRequest\Post;
+    JuiceLib\HttpRequest\Post,
+    JuiceLib\Graphic\Color\Hex,
+    JuiceLib\Graphic\Color\RGB,
+    JuiceLib\Graphic\Image,
+    JuiceLib\Plugin\Juice\Barcode\UPC;
 
 $juice = new String("JuiceLib");
 
@@ -90,3 +94,56 @@ $get->handle("var1", function($s) {
 })->send("http://workspace/", "var1=Hello&var2=World&var3=Finally", function($response) {
     Output::showline($response);
 });
+
+$red = new Hex("#F00");
+Output::showline("Red Box 200 x 200px");
+$box = new Image(200, 200);
+$box->setBackGround($red);
+Output::showHTML("<img src=\"{$box->embed()}\" />");
+Output::showline();
+Output::showline();
+
+$RGB_red = new RGB(255, 0, 0);
+Output::showline("Red Box 200 x 200px - Using RGB");
+$box1 = new Image(200, 200);
+$box1->setBackGround($RGB_red);
+Output::showHTML("<img src=\"{$box1->embed()}\" />");
+Output::showline();
+Output::showline();
+
+$green = new RGB(0, 255, 0);
+$blue = new Hex("0000ff");
+$white = new RGB(255, 255, 255);
+
+Output::showline("Multiple Boxes 600 x 200px - Using RGB and Hex");
+$bigbox = new Image(600, 200);
+$bigbox->setBackGround($white);
+
+$box_a = new Image(200, 200);
+$box_a->setBackGround($red);
+
+$bigbox->add($box_a, 0, 0);
+
+$box_b = new Image(200, 200);
+$box_b->setBackGround($green);
+$bigbox->add($box_b, 200, 0);
+
+
+$box_c = new Image(200, 200);
+$box_c->setBackGround($blue);
+$bigbox->add($box_c, 400, 0);
+
+Output::showHTML("<img src=\"{$bigbox->embed()}\" />");
+Output::showline();
+Output::showline();
+
+
+$upc = new UPC("235635632265");
+$upc->setBarWidth(2);
+$upc->setHeight(60);
+
+Output::showline("UPC barcode code = " . $upc->getCode());
+Output::showHTML("<img src=\"{$upc->embed()}\" />");
+Output::showline();
+Output::showline();
+

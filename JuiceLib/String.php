@@ -108,7 +108,7 @@ class String extends Object implements Comparable, Initializer {
         return new String($out);
     }
 
-    public function __toString() {
+    public function toString() {
         return $this->string;
     }
 

@@ -8,11 +8,13 @@ class Decimal extends Number implements Initializer {
 
     public function __construct($number) {
 
-        if (!is_float($number)) {
+        if ($number instanceof Number) {
+            $this->number = $number->toDecimal();
+        } else if (!is_object($number) && is_numeric($number)) {
+            $this->number = doubleval($number);
+        } else {
             throw new IllegalArgumentException();
         }
-
-        $this->number = $number;
     }
 
     public static function init($number) {

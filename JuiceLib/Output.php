@@ -27,7 +27,16 @@ class Output extends Object {
         echo self::out($source);
     }
 
-    public static function showline($source = NULL) {
+    public static function showHTML($source) {
+        $tmp = self::$context;
+        self::$context = self::STANDARD;
+
+        echo self::out($source);
+
+        self::$context = $tmp;
+    }
+
+    public static function showline($source = false) {
         echo self::show($source . "\n");
     }
 
