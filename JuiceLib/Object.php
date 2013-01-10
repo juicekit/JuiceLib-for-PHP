@@ -20,5 +20,13 @@ abstract class Object {
         return $this->toString();
     }
 
+    protected function callback($function, $params) {
+
+        if (is_callable($function)) {
+
+            call_user_func_array($function, $params);
+        }
+    }
+
 }
 

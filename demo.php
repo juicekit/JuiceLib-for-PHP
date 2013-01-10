@@ -14,10 +14,10 @@ use JuiceLib\String,
     JuiceLib\Integer,
     JuiceLib\Decimal,
     JuiceLib\Math,
-    JuiceLib\Session;
+    JuiceLib\Session,
+    JuiceLib\HttpRequest\Post;
 
 $juice = new String("JuiceLib");
-
 
 Output::context(Output::HTML);
 
@@ -28,13 +28,17 @@ Output::showline($juice->toUpperCase());
 Output::showline();
 
 $get = new Get();
-$get->handle("test", function($g) {
-            Output::showObject($g);
-            Output::showline();
 
-            Output::showline("test = " . $g['test']);
-            Output::showline();
-        });
+$post = new Post();
+
+
+$get->handle("test", function($g) {
+    Output::showObject($g);
+    Output::showline();
+
+    Output::showline("test = " . $g['test']);
+    Output::showline();
+});
 
 $int5 = new Integer(5);
 $int1 = new Integer(1);
@@ -60,8 +64,29 @@ $sessionA = new Session("A");
 $sessionA->getValue() == null ? $sessionA->setValue("64") : null;
 
 $get->handle("session", function($g, $a) {
-            Output::showObject($g);
-            $a->setValue($g['session']);
-        }, $sessionA);
+    Output::showObject($g);
+    $a->setValue($g['session']);
+}, $sessionA);
 
 Output::showline("SessionA = " . $sessionA->getValue());
+
+Output::showline();
+
+$post->handle("var1", function($s) {
+    Output::showline(json_encode($s));
+})->send("http://workspace/", array("var1" => "Hello", "var2" => "World"), function($response) {
+    Output::showline($response);
+})->send("http://workspace/", "var1=Hello&var2=World&var3=Finally", function($response) {
+    Output::showline($response);
+});
+
+
+Output::showline();
+
+$get->handle("var1", function($s) {
+    Output::showline(json_encode($s));
+})->send("http://workspace/", array("var1" => "Hello", "var2" => "World"), function($response) {
+    Output::showline($response);
+})->send("http://workspace/", "var1=Hello&var2=World&var3=Finally", function($response) {
+    Output::showline($response);
+});
