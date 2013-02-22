@@ -3,9 +3,12 @@
 namespace JuiceLib\Graphic\Color;
 
 use JuiceLib\String,
-    JuiceLib\Exception\IllegalArgumentException;
+    JuiceLib\Exception\IllegalArgumentException,
+    JuiceLib\Object,
+    JuiceLib\Graphic\Color\Color,
+    JuiceLib\Comparable;
 
-class Hex extends Color {
+class Hex extends Object implements Color, Comparable {
 
     private $hex;
 
@@ -43,15 +46,15 @@ class Hex extends Color {
     }
 
     public function asCMYK() {
-        throw new UnsupportedOperationException();
+        return $this->asRGB()->asCMYK();
     }
 
     public function asHSL() {
-        throw new UnsupportedOperationException();
+        return $this->asRGB()->asHSL();
     }
 
     public function asHSV() {
-        throw new UnsupportedOperationException();
+        return $this->asRGB()->asHSV();
     }
 
     public function asHex() {
@@ -64,6 +67,14 @@ class Hex extends Color {
         $b = base_convert($this->hex->substring(4, 2), 16, 10);
 
         return new RGB($r, $g, $b);
+    }
+
+    public function equals(Object $object) {
+        return $this->asRGB()->equals($object);
+    }
+
+    public function compareTo(Comparable $object) {
+        return $this->asRGB()->compareTo($object);
     }
 
 }

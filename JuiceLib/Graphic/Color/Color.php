@@ -2,17 +2,15 @@
 
 namespace JuiceLib\Graphic\Color;
 
-use JuiceLib\Object;
+interface Color {
 
-abstract class Color extends Object {
+    public function asRGB();
 
-    abstract public function asRGB();
+    public function asHex();
 
-    abstract public function asHex();
+    public function asCMYK();
 
-    abstract public function asCMYK();
+    public function asHSV();
 
-    abstract public function asHSV();
-
-    abstract public function asHSL();
+    public function asHSL();
 }

@@ -23,57 +23,71 @@ class UPC extends Plugin {
         $code = new String($code);
 
         if ($code->length() != 12 && $code->length() != 11) {
-            echo $code->length();
             throw new IllegalArgumentException();
         }
 
         $this->normalize($code);
 
-        $this->barWidth = new Integer(1);
-        $this->height = new Integer(50);
+        $this->barWidth = 1;
+        $this->height = 50;
     }
 
     public function setHeight($height) {
-        $this->height = new Integer($height);
+        $this->height = Integer::init($height)->toInt();
     }
 
     public function setBarWidth($width) {
-        $this->barWidth = new Integer($width);
+        $this->barWidth = Integer::init($width)->toInt();
     }
 
     private function codeMap($i, $key) {
         $map = array(
-            '0' => '0001101', '1' => '0011001', '2' => '0010011', '3' => '0111101',
-            '4' => '0100011', '5' => '0110001', '6' => '0101111', '7' => '0111011',
-            '8' => '0110111', '9' => '0001011', '#' => '01010', '*' => '101'
+            '0' => array(0, 0, 0, 1, 1, 0, 1),
+            '1' => array(0, 0, 1, 1, 0, 0, 1),
+            '2' => array(0, 0, 1, 0, 0, 1, 1),
+            '3' => array(0, 1, 1, 1, 1, 0, 1),
+            '4' => array(0, 1, 0, 0, 0, 1, 1),
+            '5' => array(0, 1, 1, 0, 0, 0, 1),
+            '6' => array(0, 1, 0, 1, 1, 1, 1),
+            '7' => array(0, 1, 1, 1, 0, 1, 1),
+            '8' => array(0, 1, 1, 0, 1, 1, 1),
+            '9' => array(0, 0, 0, 1, 0, 1, 1),
+            '#' => array(0, 1, 0, 1, 0),
+            '*' => array(1, 0, 1)
         );
 
         if ($i >= 7) {
-            $map = array(
-                '0' => '1110010', '1' => '1100110', '2' => '1101100', '3' => '1000010',
-                '4' => '1011100', '5' => '1001110', '6' => '1010000', '7' => '1000100',
-                '8' => '1001000', '9' => '1110100', '#' => '01010', '*' => '101'
-            );
+            $map['0'] = array(1, 1, 1, 0, 0, 1, 0);
+            $map['1'] = array(1, 1, 0, 0, 1, 1, 0);
+            $map['2'] = array(1, 1, 0, 1, 1, 0, 0);
+            $map['3'] = array(1, 0, 0, 0, 0, 1, 0);
+            $map['4'] = array(1, 0, 1, 1, 1, 0, 0);
+            $map['5'] = array(1, 0, 0, 1, 1, 1, 0);
+            $map['6'] = array(1, 0, 1, 0, 0, 0, 0);
+            $map['7'] = array(1, 0, 0, 0, 1, 0, 0);
+            $map['8'] = array(1, 0, 0, 1, 0, 0, 0);
+            $map['9'] = array(1, 1, 1, 0, 1, 0, 0);
         }
 
         if (isset($map[$key])) {
-            return new String($map[$key]);
+            return $map[$key];
         }
 
         throw new IllegalArgumentException();
     }
 
     private function normalize(String $code) {
+
         $code = $code->substring(0, 11);
 
         $accumulator = 0;
         foreach ($code->toArray() as $i => $digit) {
-            $digit = new Integer($digit);
+            $digit = Integer::init($digit)->toInt();
 
             if ($i % 2 == 0) {
-                $accumulator += $digit() * 3;
+                $accumulator += $digit * 3;
             } else {
-                $accumulator += $digit();
+                $accumulator += $digit;
             }
         }
 
@@ -90,7 +104,7 @@ class UPC extends Plugin {
 
     protected function generate() {
 
-        $this->width = new Integer(95 * $this->barWidth->toInt());
+        $this->width = 95 * $this->barWidth;
         $this->barcode = new Image($this->width, $this->height);
 
         $white = new RGB(255, 255, 255);
@@ -99,18 +113,15 @@ class UPC extends Plugin {
         $this->barcode->setBackGround($white);
 
         $x = 0;
+
         foreach ($this->hash->toArray() as $i => $symbol) {
-            $code = $this->codeMap($i, $symbol);
 
-            foreach ($code->toArray() as $bit) {
-                $color = $bit == "0" ? $white : $black;
+            foreach ($this->codeMap($i, $symbol) as $bit) {
+                $color = $bit == 0 ? $white : $black;
 
-                $bar = new Image($this->barWidth, $this->height);
-                $bar->setBackGround($color);
+                $this->barcode->addRectangle($x, 0, $this->barWidth, $this->height, $color);
 
-                $this->barcode->add($bar, $x, 0);
-
-                $x += $this->barWidth->toInt();
+                $x += $this->barWidth;
             }
         }
 

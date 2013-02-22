@@ -64,11 +64,11 @@ class String extends Object implements Comparable, Initializer {
     }
 
     public function asHtml() {
-        return htmlentities($this->string);
+        return new String(htmlentities($this->string));
     }
 
     public function charAt($pos) {
-        return substr($this->string, $pos, 1);
+        return new String(substr($this->string, $pos, 1));
     }
 
     public function equalsIgnoreCase(String $str) {
@@ -87,6 +87,7 @@ class String extends Object implements Comparable, Initializer {
         if (!empty($str)) {
             return new String(trim($this->string, $str));
         }
+
         return new String(trim($this->string));
     }
 
@@ -99,13 +100,7 @@ class String extends Object implements Comparable, Initializer {
     }
 
     public function reverse() {
-        $chars = $this->toArray();
-        $out = "";
-        for ($i = $this->length(); $i > 0; $i--) {
-            $out .= $chars[$i - 1];
-        }
-
-        return new String($out);
+        return new String(strrev($this->string));
     }
 
     public function toString() {
