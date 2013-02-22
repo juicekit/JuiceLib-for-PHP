@@ -69,7 +69,7 @@ abstract class Graphic extends Object {
         return $this->resource;
     }
 
-    protected function allocateColor(Color $color) {
+    public function allocateColor(Color $color) {
         $color = $color->asRGB();
 
         return imagecolorallocate($this->resource(), $color->getR(), $color->getG(), $color->getB());
