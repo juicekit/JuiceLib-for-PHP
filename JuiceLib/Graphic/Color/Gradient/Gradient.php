@@ -4,12 +4,14 @@ namespace JuiceLib\Graphic\Color\Gradient;
 
 use JuiceLib\Graphic\Color\Color,
     JuiceLib\Object,
+    JuiceLib\Exception\IllegalArgumentException,
     JuiceLib\Math;
 
 abstract class Gradient extends Object implements Color {
 
     private $start;
     private $end;
+    private $resource;
 
     public function setStart(Color $color) {
         $this->start = $color->asRGB();
@@ -69,6 +71,18 @@ abstract class Gradient extends Object implements Color {
 
     public function asRGB() {
         return $this->getStart();
+    }
+
+    public function resource() {
+        return $this->resource;
+    }
+
+    public function setResource($resource) {
+        if (is_bool($resource)) {
+            throw new IllegalArgumentException();
+        }
+
+        $this->resource = $resource;
     }
 
 }

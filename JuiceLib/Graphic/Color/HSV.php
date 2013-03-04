@@ -6,13 +6,15 @@ use JuiceLib\Integer,
     JuiceLib\Math,
     JuiceLib\Object,
     JuiceLib\Comparable,
+    JuiceLib\Exception\IllegalArgumentException,
     JuiceLib\Graphic\Color\Color;
 
-class HSV extends Object implements Color, Comparable {
+class HSV extends Object implements Color, Comparable, Alpha {
 
     private $h;
     private $s;
     private $v;
+    private $resource;
 
     public function __construct($h, $s, $v) {
         $this->h = Integer::init($h)->toInt();
@@ -113,6 +115,37 @@ class HSV extends Object implements Color, Comparable {
         return $this->asRGB()->compareTo($object);
     }
 
-}
+    private $alpha;
 
-?>
+    public function getAlpha() {
+        if (is_null($this->alpha)) {
+            $this->setAlpha(100);
+        }
+
+        return $this->alpha;
+    }
+
+    public function setAlpha($alpha) {
+
+        $alpha = Integer::init($alpha)->toInt();
+
+        if ($alpha < 0 || $alpha > 100) {
+            $alpha = 100;
+        }
+
+        $this->alpha = $alpha;
+    }
+
+    public function resource() {
+        return $this->resource;
+    }
+
+    public function setResource($resource) {
+        if (is_bool($resource)) {
+            throw new IllegalArgumentException();
+        }
+
+        $this->resource = $resource;
+    }
+
+}

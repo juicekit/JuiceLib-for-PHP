@@ -12,5 +12,3 @@ class Vertical extends Gradient {
     }
 
 }
-
-?>

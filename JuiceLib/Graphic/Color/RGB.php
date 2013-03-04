@@ -10,13 +10,14 @@ use JuiceLib\Integer,
     JuiceLib\Comparable,
     JuiceLib\Object;
 
-class RGB extends Object implements Color, Comparable {
+class RGB extends Object implements Color, Comparable, Alpha {
 
     private $r;
     private $g;
     private $b;
+    private $resource;
 
-    public function __construct($r, $g, $b) {
+    public function __construct($r, $g, $b, $a = 100) {
 
         $r = Integer::init($r);
         $g = Integer::init($g);
@@ -25,6 +26,8 @@ class RGB extends Object implements Color, Comparable {
         if (Math::max($r, $g, $b)->toInt() > 255) {
             throw new IllegalArgumentException();
         }
+
+        $this->setAlpha($a);
 
         $this->r = Integer::init($r)->toInt();
         $this->g = Integer::init($g)->toInt();
@@ -182,6 +185,39 @@ class RGB extends Object implements Color, Comparable {
         $o = Integer::init($rgb->getR() + $rgb->getG() + $rgb->getB())->toInt();
 
         return $t - $o;
+    }
+
+    private $alpha;
+
+    public function getAlpha() {
+        if (is_null($this->alpha)) {
+            $this->setAlpha(100);
+        }
+
+        return $this->alpha;
+    }
+
+    public function setAlpha($alpha) {
+
+        $alpha = Integer::init($alpha)->toInt();
+
+        if ($alpha < 0 || $alpha > 100) {
+            $alpha = 100;
+        }
+
+        $this->alpha = $alpha;
+    }
+
+    public function resource() {
+        return $this->resource;
+    }
+
+    public function setResource($resource) {
+        if (is_bool($resource)) {
+            throw new IllegalArgumentException();
+        }
+
+        $this->resource = $resource;
     }
 
 }

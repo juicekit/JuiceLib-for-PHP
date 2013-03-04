@@ -4,6 +4,26 @@ namespace JuiceLib;
 
 class Math {
 
+    public static function sin($arg) {
+        return sin($arg);
+    }
+
+    public static function cos($arg) {
+        return cos($arg);
+    }
+
+    public static function tan($arg) {
+        return tan($arg);
+    }
+
+    public static function deg2rad($arg) {
+        return deg2rad($arg);
+    }
+
+    public static function pi() {
+        return pi();
+    }
+
     public static function round($number, $decimal = 0) {
         if ($decimal != 0) {
             return new Decimal(round($number, Integer::init($decimal)->toInt()));

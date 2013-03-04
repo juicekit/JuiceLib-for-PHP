@@ -12,7 +12,7 @@ class String extends Object implements Comparable, Initializer {
         return new String($string);
     }
 
-    public function __construct($string) {
+    public function __construct($string = "") {
 
         if ($string instanceof $this) {
             $this->string = $string->toString();

@@ -10,7 +10,7 @@ class Autoloader {
 
     private static function autoload($class) {
         $path = str_replace(array(__NAMESPACE__, "\\"), array(NULL, "/"), $class) . ".php";
-        @include_once($path);
+        include_once($path);
     }
 
 }

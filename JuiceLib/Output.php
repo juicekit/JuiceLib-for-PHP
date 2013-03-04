@@ -8,6 +8,18 @@ class Output extends Object {
     const HTML = 0x0001;
 
     private static $context = self::STANDARD;
+    private $handler = null;
+
+    public function __construct($handler = null) {
+
+        $this->setHandler($handler);
+
+        ob_start($this->handler);
+    }
+
+    public function setHandler($handler) {
+        $this->handler = is_callable($handler) ? $handler : null;
+    }
 
     public static function context($context) {
         self::$context = $context;
@@ -55,6 +67,14 @@ class Output extends Object {
         ob_end_clean();
 
         return $content;
+    }
+
+    public function postponeheaders($wrapper, $variables = array()) {
+        $ob = ob_get_contents();
+        ob_end_clean();
+        $this->callback($wrapper, $variables);
+        ob_start($this->handler);
+        self::show($ob);
     }
 
     public static function dump() {

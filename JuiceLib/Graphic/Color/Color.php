@@ -2,7 +2,9 @@
 
 namespace JuiceLib\Graphic\Color;
 
-interface Color {
+use JuiceLib\Graphic\GD;
+
+interface Color extends GD {
 
     public function asRGB();
 

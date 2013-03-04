@@ -2,7 +2,7 @@
 
 namespace JuiceLib\Plugin\Juice\Barcode;
 
-use JuiceLib\Plugin\Plugin,
+use JuiceLib\Plugin,
     JuiceLib\String,
     JuiceLib\Integer,
     JuiceLib\Exception\IllegalArgumentException,

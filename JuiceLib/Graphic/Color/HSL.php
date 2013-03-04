@@ -5,14 +5,16 @@ namespace JuiceLib\Graphic\Color;
 use JuiceLib\Integer,
     JuiceLib\Object,
     JuiceLib\Comparable,
+    JuiceLib\Exception\IllegalArgumentException,
     JuiceLib\Graphic\Color\Color,
     JuiceLib\Math;
 
-class HSL extends Object implements Color, Comparable {
+class HSL extends Object implements Color, Comparable, Alpha {
 
     private $h;
     private $s;
     private $l;
+    private $resource;
 
     public function __construct($h, $s, $l) {
         $this->h = Integer::init($h)->toInt();
@@ -93,6 +95,39 @@ class HSL extends Object implements Color, Comparable {
 
     public function compareTo(Comparable $object) {
         return $this->asRGB()->compareTo($object);
+    }
+
+    private $alpha;
+
+    public function getAlpha() {
+        if (is_null($this->alpha)) {
+            $this->setAlpha(100);
+        }
+
+        return $this->alpha;
+    }
+
+    public function setAlpha($alpha) {
+
+        $alpha = Integer::init($alpha)->toInt();
+
+        if ($alpha < 0 || $alpha > 100) {
+            $alpha = 100;
+        }
+
+        $this->alpha = $alpha;
+    }
+
+    public function resource() {
+        return $this->resource;
+    }
+
+    public function setResource($resource) {
+        if (is_bool($resource)) {
+            throw new IllegalArgumentException();
+        }
+
+        $this->resource = $resource;
     }
 
 }
